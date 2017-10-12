@@ -1769,9 +1769,9 @@ void av1_build_inter_predictors_sb(const AV1_COMMON *cm, MACROBLOCKD *xd,
   av1_build_inter_predictors_sbuv(cm, xd, mi_row, mi_col, ctx, bsize);
 }
 
-void av1_setup_dst_planes(struct macroblockd_plane planes[MAX_MB_PLANE],
-                          BLOCK_SIZE bsize, const YV12_BUFFER_CONFIG *src,
-                          int mi_row, int mi_col) {
+void av1_setup_dst_planes(struct macroblockd_plane *planes, BLOCK_SIZE bsize,
+                          const YV12_BUFFER_CONFIG *src, int mi_row,
+                          int mi_col) {
   uint8_t *const buffers[MAX_MB_PLANE] = { src->y_buffer, src->u_buffer,
                                            src->v_buffer };
   const int widths[MAX_MB_PLANE] = { src->y_crop_width, src->uv_crop_width,

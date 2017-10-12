@@ -150,8 +150,8 @@ void av1_loop_filter_frame(YV12_BUFFER_CONFIG *frame, struct AV1Common *cm,
 // Apply the loop filter to [start, stop) macro block rows in frame_buffer.
 void av1_loop_filter_rows(YV12_BUFFER_CONFIG *frame_buffer,
                           struct AV1Common *cm,
-                          struct macroblockd_plane planes[MAX_MB_PLANE],
-                          int start, int stop, int y_only);
+                          struct macroblockd_plane *planes, int start, int stop,
+                          int y_only);
 
 typedef struct LoopFilterWorkerData {
   YV12_BUFFER_CONFIG *frame_buffer;
@@ -163,9 +163,10 @@ typedef struct LoopFilterWorkerData {
   int y_only;
 } LFWorkerData;
 
-void av1_loop_filter_data_reset(
-    LFWorkerData *lf_data, YV12_BUFFER_CONFIG *frame_buffer,
-    struct AV1Common *cm, const struct macroblockd_plane planes[MAX_MB_PLANE]);
+void av1_loop_filter_data_reset(LFWorkerData *lf_data,
+                                YV12_BUFFER_CONFIG *frame_buffer,
+                                struct AV1Common *cm,
+                                const struct macroblockd_plane *planes);
 
 // Operates on the rows described by 'lf_data'.
 int av1_loop_filter_worker(LFWorkerData *const lf_data, void *unused);

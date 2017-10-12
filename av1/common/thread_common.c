@@ -85,8 +85,8 @@ static INLINE void sync_write(AV1LfSync *const lf_sync, int r, int c,
 }
 
 #if !CONFIG_EXT_PARTITION_TYPES
-static INLINE enum lf_path get_loop_filter_path(
-    int y_only, struct macroblockd_plane planes[MAX_MB_PLANE]) {
+static INLINE enum lf_path
+get_loop_filter_path(int y_only, struct macroblockd_plane *planes) {
   if (y_only)
     return LF_PATH_444;
   else if (planes[1].subsampling_y == 1 && planes[1].subsampling_x == 1)
@@ -97,10 +97,10 @@ static INLINE enum lf_path get_loop_filter_path(
     return LF_PATH_SLOW;
 }
 
-static INLINE void loop_filter_block_plane_ver(
-    AV1_COMMON *cm, struct macroblockd_plane planes[MAX_MB_PLANE], int plane,
-    MODE_INFO **mi, int mi_row, int mi_col, enum lf_path path,
-    LOOP_FILTER_MASK *lfm) {
+static INLINE void
+loop_filter_block_plane_ver(AV1_COMMON *cm, struct macroblockd_plane *planes,
+                            int plane, MODE_INFO **mi, int mi_row, int mi_col,
+                            enum lf_path path, LOOP_FILTER_MASK *lfm) {
   if (plane == 0) {
     av1_filter_block_plane_ss00_ver(cm, &planes[0], mi_row, lfm);
   } else {
@@ -119,10 +119,10 @@ static INLINE void loop_filter_block_plane_ver(
   }
 }
 
-static INLINE void loop_filter_block_plane_hor(
-    AV1_COMMON *cm, struct macroblockd_plane planes[MAX_MB_PLANE], int plane,
-    MODE_INFO **mi, int mi_row, int mi_col, enum lf_path path,
-    LOOP_FILTER_MASK *lfm) {
+static INLINE void
+loop_filter_block_plane_hor(AV1_COMMON *cm, struct macroblockd_plane *planes,
+                            int plane, MODE_INFO **mi, int mi_row, int mi_col,
+                            enum lf_path path, LOOP_FILTER_MASK *lfm) {
   if (plane == 0) {
     av1_filter_block_plane_ss00_hor(cm, &planes[0], mi_row, lfm);
   } else {
@@ -286,10 +286,9 @@ static int loop_filter_row_worker(AV1LfSync *const lf_sync,
 #endif  //  CONFIG_PARALLEL_DEBLOCKING
 
 static void loop_filter_rows_mt(YV12_BUFFER_CONFIG *frame, AV1_COMMON *cm,
-                                struct macroblockd_plane planes[MAX_MB_PLANE],
-                                int start, int stop, int y_only,
-                                AVxWorker *workers, int nworkers,
-                                AV1LfSync *lf_sync) {
+                                struct macroblockd_plane *planes, int start,
+                                int stop, int y_only, AVxWorker *workers,
+                                int nworkers, AV1LfSync *lf_sync) {
   const AVxWorkerInterface *const winterface = aom_get_worker_interface();
   // Number of superblock rows and cols
   const int sb_rows = mi_rows_aligned_to_sb(cm) >> cm->mib_size_log2;
@@ -415,7 +414,7 @@ static void loop_filter_rows_mt(YV12_BUFFER_CONFIG *frame, AV1_COMMON *cm,
 }
 
 void av1_loop_filter_frame_mt(YV12_BUFFER_CONFIG *frame, AV1_COMMON *cm,
-                              struct macroblockd_plane planes[MAX_MB_PLANE],
+                              struct macroblockd_plane *planes,
                               int frame_filter_level,
 #if CONFIG_LOOPFILTER_LEVEL
                               int frame_filter_level_r,
