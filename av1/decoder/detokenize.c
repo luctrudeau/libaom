@@ -199,7 +199,7 @@ static int decode_coefs(MACROBLOCKD *xd, PLANE_TYPE type, tran_low_t *dqcoeff,
       dqv = ((iqmatrix[scan[c]] * (int)dqv) + (1 << (AOM_QM_BITS - 1))) >>
             AOM_QM_BITS;
 #endif
-    v = (val * dqv) >> dq_shift;
+    v = (int)(((int64_t)val * dqv) >> dq_shift);
 #endif
 
     v = (int)check_range(aom_read_bit(r, ACCT_STR) ? -v : v, xd->bd);
