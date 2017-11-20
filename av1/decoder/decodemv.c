@@ -2347,6 +2347,12 @@ static void read_inter_block_mode_info(AV1Decoder *const pbi,
     }
   }
 
+  if (is_compound != is_inter_compound_mode(mbmi->mode)) {
+    aom_internal_error(&cm->error, AOM_CODEC_CORRUPT_FRAME,
+                       "Prediction mode %d invalid with ref frame %d %d",
+                       mbmi->mode, mbmi->ref_frame[0], mbmi->ref_frame[1]);
+  }
+
 #if CONFIG_EXT_INTER
   if ((bsize < BLOCK_8X8 && !unify_bsize) ||
       (mbmi->mode != ZEROMV && mbmi->mode != ZERO_ZEROMV))
