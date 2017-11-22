@@ -556,8 +556,9 @@ static void diffwtd_mask_d32(uint8_t *mask, int which_inverse, int mask_base,
   int block_stride = block_size_wide[sb_type];
   for (i = 0; i < h; ++i) {
     for (j = 0; j < w; ++j) {
-      diff = abs(src0[i * src0_stride + j] - src1[i * src1_stride + j]);
-      diff = ROUND_POWER_OF_TWO(diff, round);
+      diff = (int)ROUND_POWER_OF_TWO(llabs((int64_t)src0[i * src0_stride + j] -
+                                           (int64_t)src1[i * src1_stride + j]),
+                                     round);
       m = clamp(mask_base + (diff / DIFF_FACTOR), 0, AOM_BLEND_A64_MAX_ALPHA);
       mask[i * block_stride + j] =
           which_inverse ? AOM_BLEND_A64_MAX_ALPHA - m : m;
