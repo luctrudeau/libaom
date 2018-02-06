@@ -19,15 +19,15 @@ if [ "$prof" == "0" ]; then
 fi
 
 # In a release direcotry
-cd ../aom
+cd /usr/local/google/home/nguyennancy/Dev/av1w/aom 
 #git pull
 commithash=`git log --pretty=%h -1`
-cd ../release
+cd /usr/local/google/home/nguyennancy/Dev/av1w/release
 
 #../aom/configure --disable-docs --disable-unit-tests
 #make clean;make
 
-rm -fr *
+rm -fr 
 cmake ../aom -DCONFIG_UNIT_TESTS=0 -DENABLE_DOCS=0
 make
 
