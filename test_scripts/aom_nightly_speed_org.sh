@@ -11,7 +11,7 @@
 #  verbose=-v
 #set -x
 
-if [ "$#" -ne 6 ]; then
+if [ "$#" -ne 5 ]; then
   root_dir=~/Dev/av1d
   pdfps=1
   petime=1
@@ -22,16 +22,15 @@ else
   pdfps=$2
   petime=$3
   speed=$4
-  bd=$5
-  html_log_file=$6
+  html_log_file=$5
 fi
 log_path=~/Dev/log
 
-if [ "$bd" == "10" ]; then
+if [ "$profile" == "2" ]; then
   bitdepth="--bit-depth=10"
 fi
 
-if [ "$bd" == "8" ]; then
+if [ "$profile" == "0" ]; then
   bitdepth=
 fi
 
@@ -40,15 +39,7 @@ build_dir=$root_dir/release
 test_dir=~/Dev/nightly
 script_dir=~/Dev/sandbox/libvpx/scripts
 
-if [ "$bd" == "10" ]; then
-. $script_dir/crowd_360p.sh
-fi
-
-if [ "$bd" == "8" ]; then
 . $script_dir/BasketballDrill_480p.sh
-fi
-
-
 
 # General options
 codec="--codec=av1"
@@ -66,9 +57,9 @@ tune_content=
 col_num=0
 laginframes=19
 
-elog=av1enc_log_p_$profile.$bd.$speed.txt
-dlog=av1dec_log_p_$profile.$bd.$speed.txt
-bstream=av1_p_$profile.$speed.$bd.$commit.webm
+elog=av1enc_log_p_$profile.$speed.txt
+dlog=av1dec_log_p_$profile.$speed.txt
+bstream=av1_p_$profile.$speed.$commit.webm
 
 taskset -c $core_id ./aomenc $verbose -o /dev/shm/"$bstream" $video $codec --limit=$frames --profile=$profile $bitdepth --fps=$fps $tune_content --target-bitrate=$bitrate --skip=0 -p 2 --cpu-used=$speed --lag-in-frames=$laginframes --min-q=0 --max-q=63 --auto-alt-ref=1 --kf-max-dist=150 --kf-min-dist=0 --drop-frame=0 --static-thresh=0 --bias-pct=50 --minsection-pct=0 --maxsection-pct=2000 --arnr-maxframes=7 --arnr-strength=5 --sharpness=0 --undershoot-pct=100 --overshoot-pct=100 --frame-parallel=0 --tile-columns=$col_num --psnr &>> $elog
 
@@ -85,7 +76,7 @@ else
   eflag=mismatch
 fi
 
-echo "AV1: $(basename $video), profile=$profile bit-depth=$bd bitrate=$bitrate frames=$frames speed=$speed"
+echo "AV1: $(basename $video), profile=$profile bitrate=$bitrate frames=$frames speed=$speed"
 
 taskset -c $core_id ./aomdec /dev/shm/"$bstream" $codec --i420 --noblit --summary 2>&1 &>> $dlog
 if [ "$?" -ne 0 ]; then
@@ -109,7 +100,7 @@ echo -e '\t'$etime"    "$dfps"     "$psnr'\t'$eflag"              "$dflag"     "
 printf "\n"
 
 # Output a html log file for email
-echo "<p> AV1: $(basename $video), bitrate=$bitrate profile=$profile bit-depth=$bd frames=$frames speed=$speed </p>" >> $log_path/$html_log_file
+echo "<p> AV1: $(basename $video), bitrate=$bitrate profile=$profile frames=$frames speed=$speed </p>" >> $log_path/$html_log_file
 echo "<table style=\"width:100%\">" >> $log_path/$html_log_file
 echo "  <tr>" >> $log_path/$html_log_file
 echo "    <th>Enc Time (ms)</th>" >> $log_path/$html_log_file
