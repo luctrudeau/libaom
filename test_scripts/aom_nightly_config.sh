@@ -4,9 +4,9 @@
 libsrc=aom
 test_dir=~/Dev/nightly
 
-echo "cmake ../$libsrc -DCONFIG_UNIT_TESTS=0 -DENABLE_DOCS=0 -DCONFIG_EXPERIMENTAL=1 -DCONFIG_OPT_REF_MV=1"
+echo "cmake ../$libsrc -DCONFIG_UNIT_TESTS=0 -DENABLE_DOCS=0 -DCONFIG_LOWBITDEPTH=1"
 
-/usr/local/bin/cmake ../$libsrc -DCONFIG_UNIT_TESTS=0 -DENABLE_DOCS=0 -DCONFIG_EXPERIMENTAL=1 -DCONFIG_OPT_REF_MV=1 > /dev/null 2>&1
+/usr/local/bin/cmake ../$libsrc -DCONFIG_UNIT_TESTS=0 -DENABLE_DOCS=0 -DCONFIG_LOWBITDEPTH=1 > /dev/null 2>&1
 if [ $? -ne 0 ]; then
   echo "Error: cmake configure fails!" > $test_dir/aom_error_config.txt
   exit 1

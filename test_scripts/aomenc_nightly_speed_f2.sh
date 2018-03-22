@@ -33,12 +33,7 @@ $script_path/sync_codebase.sh $av1_code/aom >> $log_path/$html_log_file 2>&1
 echo "</p>" >> $log_path/$html_log_file
 
 echo "<p>" >> $log_path/$html_log_file
-$script_path/aom_nightly_config.sh $av1_code/aom >> $log_path/$html_log_file 2>&1
-echo "</p>" >> $log_path/$html_log_file
-
-echo "<p>" >> $log_path/$html_log_file
-$script_path/aom_conf_build.sh $av1_code
-#$script_path/aom_conf_build.sh $av1_code >> $log_path/$html_log_file 2>&1
+$script_path/aom_conf_build.sh $av1_code >> $log_path/$html_log_file 2>&1
 echo "</p>" >> $log_path/$html_log_file
 
 #pdfps=`cat $log_path/$prev_s0_log_file | grep e_ok | awk '{print $2}' | awk 'NR==1 {print $1}'`
@@ -51,7 +46,7 @@ pdfps=`cat $log_path/$prev_s1_log_file | grep e_ok | awk '{print $2}' | awk 'NR=
 petime=`cat $log_path/$prev_s1_log_file | grep e_ok | awk '{print $1}' | awk 'NR==1 {print $1}'`
 speed=1
 bd=8
-$script_path/aom_nightly_speed_hb8.sh $av1_code $pdfps $petime $speed $bd $html_log_file >> $log_path/$s1_log_file 2>&1
+$script_path/aom_nightly_speed_hb8_f2.sh $av1_code $pdfps $petime $speed $bd $html_log_file >> $log_path/$s1_log_file 2>&1
 
 #hbd(10bit) test
 #pdfps=`cat $log_path/$prev_hbd_s0_log_file | grep e_ok | awk '{print $2}' | awk 'NR==1 {print $1}'`
@@ -64,13 +59,13 @@ pdfps=`cat $log_path/$prev_hbd_s1_log_file | grep e_ok | awk '{print $2}' | awk 
 petime=`cat $log_path/$prev_hbd_s1_log_file | grep e_ok | awk '{print $1}' | awk 'NR==1 {print $1}'`
 speed=1
 bd=10
-$script_path/aom_nightly_speed_hb10.sh $av1_code $pdfps $petime $speed $bd $html_log_file >> $log_path/$hbd_s1_log_file 2>&1
+$script_path/aom_nightly_speed_hb10_f2.sh $av1_code $pdfps $petime $speed $bd $html_log_file >> $log_path/$hbd_s1_log_file 2>&1
 
 # Send an email to coworkers
 users=nguyennancy
 host_name=`hostname`
 sender=nguyennancy
-cc_list="--cc=yunqingwang,vpx-eng"
+#cc_list="--cc=yunqingwang,vpx-eng"
 
 $script_path/gen_html_footer.sh >> $log_path/$html_log_file
 

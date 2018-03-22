@@ -1,4 +1,4 @@
-bin/sh
+#!/bin/sh
 # File:
 #  nightly_speed.sh
 # Decription:
@@ -9,10 +9,10 @@ bin/sh
 # Note:
 #  See encoder config output if set,
 #  verbose=-v
-set -x
+#set -x
 
 if [ "$#" -ne 6 ]; then
-  root_dir=~/Dev/av1d
+  root_dir=~/Dev/av1w
   pdfps=1
   petime=1
   speed=0
@@ -37,18 +37,16 @@ fi
 
 code_dir=$root_dir/aom
 build_dir=$root_dir/release
-test_dir=~/Dev/nightly
+test_dir=~/Dev/weekly
 script_dir=~/Dev/sandbox/libvpx/scripts
 
 if [ "$bd" == "10" ]; then
-. $script_dir/crowd_360p.sh
+. $script_dir/crowd_1080.sh
 fi
 
 if [ "$bd" == "8" ]; then
-. $script_dir/BasketballDrill_480p.sh
+. $script_dir/night_720.sh
 fi
-
-
 
 # General options
 codec="--codec=av1"
@@ -66,16 +64,14 @@ tune_content=
 col_num=0
 laginframes=19
 
-elog=av1enc_log_p_$profile.$bd.$speed.txt
-dlog=av1dec_log_p_$profile.$bd.$speed.txt
-bstream=av1_p_$profile.$speed.$bd.$commit.webm
+elog=av1encw_log_p_$profile.$bd.$speed.txt
+dlog=av1decw_log_p_$profile.$bd.$speed.txt
+bstream=av1w_p_$profile.$speed.$bd.$commit.webm
 
-taskset -c $core_id ./aomenc $verbose -o /dev/shm/"$bstream" $video $codec --limit=$frames --profile=$profile $bitdepth --fps=$fps $tune_content --target-bitrate=$bitrate --skip=0 -p 2 --cpu-used=$speed --lag-in-frames=$laginframes --min-q=0 --max-q=63 --auto-alt-ref=1 --kf-max-dist=150 --kf-min-dist=0 --drop-frame=0 --static-thresh=0 --bias-pct=50 --minsection-pct=0 --maxsection-pct=2000 --arnr-maxframes=7 --arnr-strength=5 --sharpness=0 --undershoot-pct=100 --overshoot-pct=100 --frame-parallel=0 --tile-columns=$col_num --psnr &>> $elog
+taskset -c $core_id ./aomenc $verbose -o /dev/shm/"$bstream" $video $codec --fps=$fps --skip=0 -p 2 --cpu-used=$speed --target-bitrate=$bitrate --lag-in-frames=$laginframes --profile=$profile $bitdepth --limit=$frames --enable-cdef=0 --min-q=0 --max-q=63 --auto-alt-ref=1 --kf-max-dist=150 --kf-min-dist=0 --drop-frame=0 --static-thresh=0 --bias-pct=50 --minsection-pct=0 --maxsection-pct=2000 --arnr-maxframes=7 --arnr-strength=5 --sharpness=0 --undershoot-pct=100 --overshoot-pct=100 --frame-parallel=0 -t 1 --psnr --test-decode=warn -D &>>$elog
 
 # Note: $2 is the time unit, ms or us
 etime=`cat $elog | awk 'NR==2 {NF-=3; print $NF}'`
-# efps=`cat $elog | grep 'Pass 2/2' | grep 'fps)' | sed -e 's/^.*b\/s//' | awk '{print $3}'`
-# efps=`echo $efps | sed 's/(//'`
 
 psnr=`cat $elog | grep 'PSNR' | awk '{print $5, $6, $7, $8, $9}'`
 tmp=`cat $elog | grep mismatch`
@@ -88,6 +84,8 @@ fi
 echo "AV1: $(basename $video), profile=$profile bit-depth=$bd bitrate=$bitrate frames=$frames speed=$speed"
 
 taskset -c $core_id ./aomdec /dev/shm/"$bstream" $codec --i420 --noblit --summary 2>&1 &>> $dlog
+dtime=`cat $dlog | awk 'NR==1 {NF-=3; print $NF}'`
+
 if [ "$?" -ne 0 ]; then
   dflag=fault
 else
@@ -98,34 +96,42 @@ fi
 dfps=`awk '{print $9}' < $dlog`
 dfps=`echo $dfps | sed 's/(//'`
 
-dpercent=`echo "($dfps - $pdfps) / $pdfps * 100" | bc -l`
-dpercent=${dpercent:0:5}
+vp9enctime=2431758
+ev1v9time=`echo "($etime / $vp9enctime)" | bc -l`
+ev1v9time=${ev1v9time:0:5}
 
-epercent=`echo "($petime - $etime) / $petime * 100" | bc -l`
-epercent=${epercent:0:5}
+vp9dectime=2747652
+dv1v9time=`echo "($dtime / $vp9dectime)" | bc -l`
+dv1v9time=${dv1v9time:0:5}
 
 echo -e '\t'"Enc fps    Dec fps    PSNR"'\t\t\t\t'"Enc status   Dec status   dup(%)         eup(%)"
 echo -e '\t'$etime"    "$dfps"     "$psnr'\t'$eflag"              "$dflag"     "$dpercent"    "$epercent
 printf "\n"
 
 # Output a html log file for email
-echo "<p> AV1: $(basename $video), bitrate=$bitrate profile=$profile bit-depth=$bd frames=$frames speed=$speed </p>" >> $log_path/$html_log_file
+echo "<p> <b> AV1: $(basename $video), bitrate=$bitrate profile=$profile bit-depth=$bd frames=$frames speed=$speed </b> </p>" >> $log_path/$html_log_file
 echo "<table style=\"width:100%\">" >> $log_path/$html_log_file
 echo "  <tr>" >> $log_path/$html_log_file
 echo "    <th>Enc Time (ms)</th>" >> $log_path/$html_log_file
-echo "    <th>Enc Speedup(%)</th>" >> $log_path/$html_log_file
+echo "    <th>Enc Time (x) VP1 vs VP9(=2431758)</th>" >> $log_path/$html_log_file
+echo "    <th>Dec Time (ms)</th>" >> $log_path/$html_log_file
 echo "    <th>Dec FPS</th>" >> $log_path/$html_log_file
-echo "    <th>Dec Speedup(%)</th>" >> $log_path/$html_log_file
+echo "    <th>Dec Time (x) VP1 vs VP9(=2747652)</th>" >> $log_path/$html_log_file
+echo "    <th>Speed</th>" >> $log_path/$html_log_file
+echo "    <th>bit-depth</th>" >> $log_path/$html_log_file
 echo "    <th>PSNR</th>" >> $log_path/$html_log_file
 echo " </tr>" >> $log_path/$html_log_file
 echo " <tr>" >> $log_path/$html_log_file
 echo "    <td>$etime</td>" >> $log_path/$html_log_file
-echo "    <td>$epercent</td>" >> $log_path/$html_log_file
+echo "    <td>$ev1v9time</td>" >> $log_path/$html_log_file
+echo "    <td>$dtime</td>" >> $log_path/$html_log_file
 echo "    <td>$dfps</td>" >> $log_path/$html_log_file
-echo "    <td>$dpercent</td>" >> $log_path/$html_log_file
+echo "    <td>$dv1v9time</td>" >> $log_path/$html_log_file
+echo "    <td>$speed</td>" >> $log_path/$html_log_file
+echo "    <td>$bd</td>" >> $log_path/$html_log_file
 echo "    <td>$psnr</td>" >> $log_path/$html_log_file
 echo "  </tr>" >> $log_path/$html_log_file
 echo "</table>" >> $log_path/$html_log_file
-
+echo "<p> bitstream folder/cns/yv-d/home/on2-prod/nguyennancy/Weekly/$bstream</p>" >> $log_path/$html_log_file
 # Copy bitstream file to cns
 #fileutil cp /run/shm/"$bstream" /cns/yv-d/home/on2-prod/nguyennancy/Nightly/.

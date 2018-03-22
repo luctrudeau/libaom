@@ -50,7 +50,7 @@ root_dir=~/Dev/vp9d
 cd $root_dir/libvpx
 commit=`git log --pretty=%h -1`
 
-. $script_dir/video_sequence.sh
+. $script_dir/video_nightly_bd8.sh
 
 # General options
 codec="--codec=vp9"
@@ -59,9 +59,9 @@ core_id=1
 
 cd $test_dir
 
-bstream=vp9_profile_$profile.$commit.webm
-elog=vp9enc_log_p_$profile.txt
-dlog=vp9dec_log_p_$profile.txt
+bstream=vp9_nightly_profile_$profile.$commit.webm
+elog=vp9enc_nightly_log_p_$profile.$commit.txt
+dlog=vp9dec_nightly_log_p_$profile.$commit.txt
 
 taskset -c $core_id ./vpxenc $verbose -o /dev/shm/"$bstream" $video $codec --limit=$frames --profile=$profile $bitdepth --fps=$fps --target-bitrate=$bitrate --skip=0 -p 2 --good --cpu-used=0 --lag-in-frames=25 --min-q=0 --max-q=63 --auto-alt-ref=1 --kf-max-dist=150 --kf-min-dist=0 --drop-frame=0 --static-thresh=0 --bias-pct=50 --minsection-pct=0 --maxsection-pct=2000 --arnr-maxframes=7 --arnr-strength=5 --sharpness=0 --undershoot-pct=100 --overshoot-pct=100 --frame-parallel=0 --test-decode=warn --psnr &>> $elog
 

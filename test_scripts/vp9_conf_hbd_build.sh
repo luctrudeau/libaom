@@ -7,7 +7,7 @@ root_dir=~/Dev/vp9d
 build_dir=$root_dir/release
 
 if [ "$bitdepthflag" = "highbitdepth" ]; then
-  build_flag=--enable-vp9-highbitdepth
+  build_flag="--enable-vp9-highbitdepth"
 else
   build_flag=
 fi
@@ -16,6 +16,7 @@ cd $build_dir
 rm -r -f *
 make clean > /dev/null
 
+build_flag="--enable-vp9-highbitdepth"
 common_flag="--enable-pic --disable-unit-tests --disable-docs"
 
 /usr/local/google/home/nguyennancy/Dev/vp9d/libvpx/configure $common_flag $build_flag > /dev/null

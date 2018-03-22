@@ -14,12 +14,12 @@
 # bitrate=600
 # fps="30000/1001"
 
-video=~/Dev/samples/videos/speed-set/night_720p30.y4m
-wi=1280
-he=720
-frames=150
-bitrate=2500
-fps="30/1"
+video=~/Dev/samples/videos/midres/crowd_run_360p_10.y4m
+frames=2
+bitrate=800
+fps="50/1"
+wide=
+high=
 
 # video=~/Dev/samples/videos/speed-set/BasketballDrive_1920x1080_50.y4m
 # wi=1920

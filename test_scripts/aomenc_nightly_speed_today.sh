@@ -33,12 +33,7 @@ $script_path/sync_codebase.sh $av1_code/aom >> $log_path/$html_log_file 2>&1
 echo "</p>" >> $log_path/$html_log_file
 
 echo "<p>" >> $log_path/$html_log_file
-$script_path/aom_nightly_config.sh $av1_code/aom >> $log_path/$html_log_file 2>&1
-echo "</p>" >> $log_path/$html_log_file
-
-echo "<p>" >> $log_path/$html_log_file
-$script_path/aom_conf_build.sh $av1_code
-#$script_path/aom_conf_build.sh $av1_code >> $log_path/$html_log_file 2>&1
+$script_path/aom_conf_build.sh $av1_code >> $log_path/$html_log_file 2>&1
 echo "</p>" >> $log_path/$html_log_file
 
 #pdfps=`cat $log_path/$prev_s0_log_file | grep e_ok | awk '{print $2}' | awk 'NR==1 {print $1}'`
@@ -70,7 +65,7 @@ $script_path/aom_nightly_speed_hb10.sh $av1_code $pdfps $petime $speed $bd $html
 users=nguyennancy
 host_name=`hostname`
 sender=nguyennancy
-cc_list="--cc=yunqingwang,vpx-eng"
+#cc_list="--cc=yunqingwang,vpx-eng"
 
 $script_path/gen_html_footer.sh >> $log_path/$html_log_file
 

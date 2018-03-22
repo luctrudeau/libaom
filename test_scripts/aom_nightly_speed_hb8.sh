@@ -1,4 +1,4 @@
-bin/sh
+#!/bin/sh
 # File:
 #  nightly_speed.sh
 # Decription:
@@ -9,7 +9,7 @@ bin/sh
 # Note:
 #  See encoder config output if set,
 #  verbose=-v
-set -x
+#set -x
 
 if [ "$#" -ne 6 ]; then
   root_dir=~/Dev/av1d
@@ -104,28 +104,55 @@ dpercent=${dpercent:0:5}
 epercent=`echo "($petime - $etime) / $petime * 100" | bc -l`
 epercent=${epercent:0:5}
 
+#x=45425
+#vp9=$(($etime /$x))
+
+vp9enct=45188
+vp9=`echo "($etime / $vp9enct)" | bc -l`
+vp9=${vp9:0:5}
+
+vp9fps=1108.08
+dfpsvp9=`echo "($vp9fps / $dfps)" | bc -l`
+dfpsvp9=${dfpsvp9:0:5}
+
+bs_dir=/run/shm
+cd $bs_dir
+bssize=`cat $bstream | wc -c`
+
 echo -e '\t'"Enc fps    Dec fps    PSNR"'\t\t\t\t'"Enc status   Dec status   dup(%)         eup(%)"
 echo -e '\t'$etime"    "$dfps"     "$psnr'\t'$eflag"              "$dflag"     "$dpercent"    "$epercent
 printf "\n"
 
 # Output a html log file for email
-echo "<p> AV1: $(basename $video), bitrate=$bitrate profile=$profile bit-depth=$bd frames=$frames speed=$speed </p>" >> $log_path/$html_log_file
+echo "<p style="color:blue"> AV1: $(basename $video), bitrate=$bitrate profile=$profile bit-depth=$bd frames=$frames speed=$speed </p>" >> $log_path/$html_log_file
 echo "<table style=\"width:100%\">" >> $log_path/$html_log_file
-echo "  <tr>" >> $log_path/$html_log_file
+echo "  <tr bgcolor="#E8F8F8">" >> $log_path/$html_log_file
 echo "    <th>Enc Time (ms)</th>" >> $log_path/$html_log_file
 echo "    <th>Enc Speedup(%)</th>" >> $log_path/$html_log_file
+echo "    <th>Enc Time (x) - VP9 vs AV1</th>" >> $log_path/$html_log_file
 echo "    <th>Dec FPS</th>" >> $log_path/$html_log_file
 echo "    <th>Dec Speedup(%)</th>" >> $log_path/$html_log_file
+echo "    <th>Dec FPS (x) - VP9 vs AV1</th>" >> $log_path/$html_log_file
 echo "    <th>PSNR</th>" >> $log_path/$html_log_file
+echo "    <th>bstream size (bytes)</th>" >> $log_path/$html_log_file
 echo " </tr>" >> $log_path/$html_log_file
 echo " <tr>" >> $log_path/$html_log_file
 echo "    <td>$etime</td>" >> $log_path/$html_log_file
 echo "    <td>$epercent</td>" >> $log_path/$html_log_file
+echo "    <td>$vp9</td>" >> $log_path/$html_log_file
 echo "    <td>$dfps</td>" >> $log_path/$html_log_file
 echo "    <td>$dpercent</td>" >> $log_path/$html_log_file
+echo "    <td>$dfpsvp9</td>" >> $log_path/$html_log_file
 echo "    <td>$psnr</td>" >> $log_path/$html_log_file
+echo "    <td>$bssize</td>" >> $log_path/$html_log_file
+echo "  </tr>" >> $log_path/$html_log_file
+echo " <tr>" >> $log_path/$html_log_file
+echo "    <td colspan=\"8\">bitstream folder: /cns/yv-d/home/on2-prod/nguyennancy/Nightly/$bstream" >> $log_path/$html_log_file
+echo "  </tr>" >> $log_path/$html_log_file
+echo "    <td colspan=\"8\">Note: VP9 profile=0 bit-depth=8 speed=0 enc_time=45188(ms), dec_time=72197(ms), dec_FPS=1108.08" >> $log_path/$html_log_file
 echo "  </tr>" >> $log_path/$html_log_file
 echo "</table>" >> $log_path/$html_log_file
-
+echo "</table>" >> $log_path/$html_log_file
+echo " <br style=\"width:100%\">" >> $log_path/$html_log_file
 # Copy bitstream file to cns
-#fileutil cp /run/shm/"$bstream" /cns/yv-d/home/on2-prod/nguyennancy/Nightly/.
+fileutil cp /run/shm/"$bstream" /cns/yv-d/home/on2-prod/nguyennancy/Nightly/.

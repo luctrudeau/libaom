@@ -70,7 +70,7 @@ $script_path/aom_nightly_speed_hb10.sh $av1_code $pdfps $petime $speed $bd $html
 users=nguyennancy
 host_name=`hostname`
 sender=nguyennancy
-cc_list="--cc=yunqingwang,vpx-eng"
+#cc_list="--cc=yunqingwang,vpx-eng"
 
 $script_path/gen_html_footer.sh >> $log_path/$html_log_file
 
