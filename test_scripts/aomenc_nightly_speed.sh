@@ -33,12 +33,7 @@ $script_path/sync_codebase.sh $av1_code/aom >> $log_path/$html_log_file 2>&1
 echo "</p>" >> $log_path/$html_log_file
 
 echo "<p>" >> $log_path/$html_log_file
-$script_path/aom_nightly_config.sh $av1_code/aom >> $log_path/$html_log_file 2>&1
-echo "</p>" >> $log_path/$html_log_file
-
-echo "<p>" >> $log_path/$html_log_file
-$script_path/aom_conf_build.sh $av1_code
-#$script_path/aom_conf_build.sh $av1_code >> $log_path/$html_log_file 2>&1
+$script_path/aom_conf_build.sh $av1_code >> $log_path/$html_log_file 2>&1
 echo "</p>" >> $log_path/$html_log_file
 
 #pdfps=`cat $log_path/$prev_s0_log_file | grep e_ok | awk '{print $2}' | awk 'NR==1 {print $1}'`

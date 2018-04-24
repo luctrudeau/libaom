@@ -169,4 +169,4 @@ echo "</table>" >> $log_path/$html_log_file
 echo "</table>" >> $log_path/$html_log_file
 echo " <br style=\"width:100%\">" >> $log_path/$html_log_file
 # Copy bitstream file to cns
-fileutil cp /run/shm/"$bstream" /cns/yv-d/home/on2-prod/nguyennancy/Nightly/.
+#fileutil cp /run/shm/"$bstream" /cns/yv-d/home/on2-prod/nguyennancy/Nightly/.

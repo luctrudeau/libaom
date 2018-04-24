@@ -87,18 +87,7 @@ fi
 
 echo "AV1: $(basename $video), profile=$profile bit-depth=$bd bitrate=$bitrate frames=$frames speed=$speed"
 
-for i in {1..20};
-do
-  taskset -c 1 ~/Dev/av1d/release/aomdec /dev/shm/"$bstream" --codec=av1 --i420 --noblit --summary 2>&1 &>> $dlog 
-done
-
-output_dir=~/Dev/nightly
-awk '{print $9}' <$dlog &>>~/Dev/nightly/output2.txt
-echo | sed 's/(//' <~/Dev/nightly/output2.txt &>>~/Dev/nightly/output3.txt
-awk '{ total += $1; count++ } END { print total/count }' ~/Dev/nightly/output3.txt &>>~/Dev/nightly/sum.txt
-dfps=`awk '{print $1}' < ~/Dev/nightly/sum.txt` 
-
-#taskset -c $core_id ./aomdec /dev/shm/"$bstream" $codec --i420 --noblit --summary 2>&1 &>> $dlog
+taskset -c $core_id ./aomdec /dev/shm/"$bstream" $codec --i420 --noblit --summary 2>&1 &>> $dlog
 
 if [ "$?" -ne 0 ]; then
   dflag=fault
@@ -107,8 +96,8 @@ else
 fi
 
 # Note: $8 is the time unit ms or us
-#dfps=`awk '{print $9}' < $dlog`
-#dfps=`echo $dfps | sed 's/(//'`
+dfps=`awk '{print $9}' < $dlog`
+dfps=`echo $dfps | sed 's/(//'`
 
 dpercent=`echo "($dfps - $pdfps) / $pdfps * 100" | bc -l`
 dpercent=${dpercent:0:5}
@@ -132,7 +121,7 @@ cd $bs_dir
 bssize=`cat $bstream | wc -c`
 
 echo -e '\t'"Enc fps    Dec fps    PSNR"'\t\t\t\t'"Enc status   Dec status   dup(%)         eup(%)"
-echo -e '\t'$etime"    "$dfps"     "$psnr'\t'$eflag"              "$dflag"     "$dpercent"    "$epercent
+echo -e '\t'$etime"    "$sumdfps"     "$psnr'\t'$eflag"              "$dflag"     "$dpercent"    "$epercent
 printf "\n"
 
 # Output a html log file for email
@@ -169,4 +158,4 @@ echo "</table>" >> $log_path/$html_log_file
 echo "</table>" >> $log_path/$html_log_file
 echo " <br style=\"width:100%\">" >> $log_path/$html_log_file
 # Copy bitstream file to cns
-fileutil cp /run/shm/"$bstream" /cns/yv-d/home/on2-prod/nguyennancy/Nightly/.
+#fileutil cp /run/shm/"$bstream" /cns/yv-d/home/on2-prod/nguyennancy/Nightly/.
