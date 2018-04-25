@@ -1,10 +1,10 @@
 #!/bin/sh
 #set -x
 
-script_path=~/Dev/sandbox/libvpx/scripts
+script_path=~/Devtest/sandbox/aom/test_scripts
 
-av1_code=~/Dev/av1d
-log_path=~/Dev/log
+av1_code=~/Devtest/av1d
+log_path=~/Devtest/log
 
 date_str=`date -d tomorrow +%b_%d_%Y`
 
@@ -23,7 +23,7 @@ prev_s1_log_file=av1_s1_$prev_date_str.txt
 #prev_hbd_s0_log_file=av1_hbd_s0_$prev_date_str.txt
 prev_hbd_s1_log_file=av1_hbd_s1_$prev_date_str.txt
 
-test_dir=~/Dev/nightly
+test_dir=~/Devtest/nightly
 rm $test_dir/*
 
 $script_path/gen_html_header.sh > $log_path/$html_log_file
@@ -65,8 +65,8 @@ $script_path/aom_nightly_speed_hb10.sh $av1_code $pdfps $petime $speed $bd $html
 users=nguyennancy
 host_name=`hostname`
 sender=nguyennancy
-cc_list="--cc=yunqingwang,vpx-eng"
+#cc_list="--cc=yunqingwang,vpx-eng"
 
 $script_path/gen_html_footer.sh >> $log_path/$html_log_file
 
-sendgmr --to=$users $cc_list --subject="AV1 Nightly Speed Report" --from=$sender --reply_to=$sender --html_file=/usr/local/google/home/nguyennancy/Dev/log/$html_log_file --body_file=/usr/local/google/home/nguyennancy/Dev/log/$html_log_file
+sendgmr --to=$users $cc_list --subject="AV1 Nightly Speed Report" --from=$sender --reply_to=$sender --html_file=/usr/local/google/home/nguyennancy/Devtest/log/$html_log_file --body_file=/usr/local/google/home/nguyennancy/Devtest/log/$html_log_file

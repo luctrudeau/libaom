@@ -1,31 +1,31 @@
 #!/bin/sh
-#set -x
+set -x
 
-log_path=~/Dev/log
+log_path=~/Devtest/log
 html_log_file=aomencwk.html
 
 bd=8
 speed=1
-frames=150
+frames=2
 bitrate=2500
 profile=0
 date=`date +%b_%d_%Y`
-av1_code=~/Dev/av1w
+av1_code=~/Devtest/av1w
 
 cd $av1_code/aom
 commit=`git log --pretty=%h -1`
 
-elog_dir=~/Dev/weekly
+elog_dir=~/Devtest/weekly
 elog=$elog_dir/av1encw_p.0.$bd.$speed.$commit.txt
 dlog=$elog_dir/av1decw_p.0.$bd.$speed.$commit.txt
 
-script_path=~/Dev/sandbox/libvpx/scripts
+script_path=~/Devtest/sandbox/aom/test_scripts
 
-build_dir=/usr/local/google/home/nguyennancy/Dev/av1w/release
+build_dir=~/Devtest/av1w/release
 cd $build_dir
 bstream=night_720p30_$commit.$bd.$speed.f$frames.webm
 
-taskset -c 0 ./aomenc -o /run/shm/$bstream ~/Dev/samples/videos/speed-set/night_720p30.y4m --codec=av1 --fps=30/1 --skip=0 -p 2 --cpu-used=$speed --target-bitrate=$bitrate --lag-in-frames=19 --profile=$profile --bit-depth=$bd --limit=$frames --enable-cdef=0 --min-q=0 --max-q=63 --auto-alt-ref=1 --kf-max-dist=150 --kf-min-dist=0 --drop-frame=0 --static-thresh=0 --bias-pct=50 --minsection-pct=0 --maxsection-pct=2000 --arnr-maxframes=7 --arnr-strength=5 --sharpness=0 --undershoot-pct=100 --overshoot-pct=100 --frame-parallel=0 -t 1 --psnr --test-decode=warn -D &>> $elog
+taskset -c 0 ./aomenc -o /run/shm/$bstream ~/Devtest/samples/videos/speed-set/night_720p30.y4m --codec=av1 --fps=30/1 --skip=0 -p 2 --cpu-used=$speed --target-bitrate=$bitrate --lag-in-frames=19 --profile=$profile --bit-depth=$bd --limit=$frames --enable-cdef=0 --min-q=0 --max-q=63 --auto-alt-ref=1 --kf-max-dist=150 --kf-min-dist=0 --drop-frame=0 --static-thresh=0 --bias-pct=50 --minsection-pct=0 --maxsection-pct=2000 --arnr-maxframes=7 --arnr-strength=5 --sharpness=0 --undershoot-pct=100 --overshoot-pct=100 --frame-parallel=0 -t 1 --psnr --test-decode=warn -D &>> $elog
 
 taskset -c 1 ./aomdec /run/shm/$bstream --codec=av1 --i420 --noblit --summary 2>&1 &>> $dlog
 
@@ -80,7 +80,7 @@ echo "  <tr>" >> $log_path/$html_log_file
 echo "    <td colspan=\"8\">PSNR $psnr" >> $log_path/$html_log_file
 echo " </tr>" >> $log_path/$html_log_file
 echo "  <tr>" >> $log_path/$html_log_file
-echo "    <td colspan=\"8\">Note: VP9_enc_time=33744, VP9_dec_time=555720" >> $log_path/$html_log_file
+echo "    <td colspan=\"8\">Note: VP9_enc_time=337444, VP9_dec_time=555720" >> $log_path/$html_log_file
 echo " </tr>" >> $log_path/$html_log_file
 echo "</table>" >> $log_path/$html_log_file
 echo " <br style=\"width:100%\">" >> $log_path/$html_log_file
@@ -89,4 +89,4 @@ echo " <br style=\"width:100%\">" >> $log_path/$html_log_file
 cp $elog $log_path
 cp $dlog $log_path
 
-fileutil cp /run/shm/"$bstream" /cns/yv-d/home/on2-prod/nguyennancy/Weekly/.
+#fileutil cp /run/shm/"$bstream" /cns/yv-d/home/on2-prod/nguyennancy/Weekly/.

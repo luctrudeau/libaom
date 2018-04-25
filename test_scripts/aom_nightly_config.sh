@@ -2,7 +2,7 @@
 #set -x
 
 libsrc=aom
-test_dir=~/Dev/nightly
+test_dir=~/Devtest/nightly
 
 echo "cmake ../$libsrc -DCONFIG_UNIT_TESTS=0 -DENABLE_DOCS=0 -DCONFIG_LOWBITDEPTH=1"
 

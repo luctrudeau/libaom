@@ -5,14 +5,14 @@
 #  Configure, build, and run AV1 encoder/decoder for each experimental tool.
 #  Display the encoder/decode run time
 # Preassumption:
-#  1) Assume all script files are in ~/Dev/sandbox/libvpx/scripts
+#  1) Assume all script files are in ~/Devtest/sandbox/aom/test_scripts
 # Note:
 #  See encoder config output if set,
 #  verbose=-v
 #set -x
 
 if [ "$#" -ne 6 ]; then
-  root_dir=~/Dev/av1d
+  root_dir=~/Devtest/av1d
   pdfps=1
   petime=1
   speed=0
@@ -25,7 +25,7 @@ else
   bd=$5
   html_log_file=$6
 fi
-log_path=~/Dev/log
+log_path=~/Devtest/log
 
 if [ "$bd" == "10" ]; then
   bitdepth="--bit-depth=10"
@@ -37,8 +37,8 @@ fi
 
 code_dir=$root_dir/aom
 build_dir=$root_dir/release
-test_dir=~/Dev/nightly
-script_dir=~/Dev/sandbox/libvpx/scripts
+test_dir=~/Devtest/nightly
+script_dir=~/Devtest/sandbox/aom/test_scripts
 
 if [ "$bd" == "10" ]; then
 . $script_dir/crowd_360p.sh
@@ -89,14 +89,14 @@ echo "AV1: $(basename $video), profile=$profile bit-depth=$bd bitrate=$bitrate f
 
 for i in {1..20};
 do
-  taskset -c 1 ~/Dev/av1d/release/aomdec /dev/shm/"$bstream" --codec=av1 --i420 --noblit --summary 2>&1 &>> $dlog 
+  taskset -c 1 ~/Devtest/av1d/release/aomdec /dev/shm/"$bstream" --codec=av1 --i420 --noblit --summary 2>&1 &>> $dlog 
 done
 
-output_dir=~/Dev/nightly
-awk '{print $9}' <$dlog &>>~/Dev/nightly/output2.txt
-echo | sed 's/(//' <~/Dev/nightly/output2.txt &>>~/Dev/nightly/output3.txt
-awk '{ total += $1; count++ } END { print total/count }' ~/Dev/nightly/output3.txt &>>~/Dev/nightly/sum.txt
-dfps=`awk '{print $1}' < ~/Dev/nightly/sum.txt` 
+#output_dir=~/Devtest/nightly
+awk '{print $9}' <$dlog &>>$test_dir/output2.txt
+echo | sed 's/(//' <$test_dir/output2.txt &>>$test_dir/output3.txt
+awk '{ total += $1; count++ } END { print total/count }' $test_dir/output3.txt &>>$test_dir/sum.txt
+dfps=`awk '{print $1}' < $test_dir/sum.txt` 
 
 #taskset -c $core_id ./aomdec /dev/shm/"$bstream" $codec --i420 --noblit --summary 2>&1 &>> $dlog
 
@@ -169,4 +169,4 @@ echo "</table>" >> $log_path/$html_log_file
 echo "</table>" >> $log_path/$html_log_file
 echo " <br style=\"width:100%\">" >> $log_path/$html_log_file
 # Copy bitstream file to cns
-fileutil cp /run/shm/"$bstream" /cns/yv-d/home/on2-prod/nguyennancy/Nightly/.
+#fileutil cp /run/shm/"$bstream" /cns/yv-d/home/on2-prod/nguyennancy/Nightly/.

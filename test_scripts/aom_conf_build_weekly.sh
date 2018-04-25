@@ -2,7 +2,7 @@
 
 root_dir=$1
 build_dir=$root_dir/release
-script_dir=~/Dev/sandbox/libvpx/scripts
+script_dir=~/Devtest/sandbox/aom/test_scripts
 exp_tool=
 
 cd $build_dir
@@ -16,7 +16,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-test_dir=~/Dev/weekly
+test_dir=~/Devtest/weekly
 
 cp -f ./aomenc $test_dir/.
 cp -f ./aomdec $test_dir/.
