@@ -14,7 +14,7 @@
 # bitrate=600
 # fps="30000/1001"
 
-video=~/Dev/samples/videos/midres/crowd_run_360p_10.y4m
+video=~/Devtest/samples/videos/midres/crowd_run_360p_10.y4m
 frames=2
 bitrate=800
 fps="50/1"

@@ -1,5 +1,5 @@
 #!/bin/sh
-set -x
+#set -x
 
 log_path=~/Devtest/log
 html_log_file=aomencwk.html
@@ -50,6 +50,9 @@ dv1v9time=${dv1v9time:0:5}
 
 psnr=`cat $elog | grep 'PSNR' | awk '{print $5, $6, $7, $8, $9}'`
 
+data=https://docs.google.com/spreadsheets/d/1kstmSOkTeo92hBAjXg9AICkrjc3_dnSt0poWmssqAd0
+graph=https://docs.google.com/spreadsheets/d/1aNcHCOX606w-kVNURfsH8sNxZuDSnIcmzDl_jEKOg9U
+
 echo "<table style=\"width:100%\">" >> $log_path/$html_log_file
 echo "  <tr style="color:blue" bgcolor="#FAF988">" >> $log_path/$html_log_file
 echo "    <th style="text-align:center" colspan=\"8\"> WEEKLY SPEED REPORT </th>" >> $log_path/$html_log_file
@@ -69,8 +72,6 @@ echo " <tr>" >> $log_path/$html_log_file
 echo "    <td>$etime</td>" >> $log_path/$html_log_file
 echo "    <td>$ev1v9time</td>" >> $log_path/$html_log_file
 echo "    <td>$dtime</td>" >> $log_path/$html_log_file
-echo "    <th>$dfps</th>" >> $log_path/$html_log_file
-echo "    <td>$dv1v9time</td>" >> $log_path/$html_log_file
 echo "    <td>$speed</td>" >> $log_path/$html_log_file
 echo "    <th>$bd</th>" >> $log_path/$html_log_file
 echo "    <td>$wc</td>" >> $log_path/$html_log_file
@@ -90,5 +91,9 @@ echo " <br style=\"width:100%\">" >> $log_path/$html_log_file
 
 cp $elog $log_path
 cp $dlog $log_path
+
+echo " <br style=\"width:100%\">" >> $log_path/$html_log_file
+echo "<p style="color:green">Note: AV1 Weekly Speed Data:$data</p>" >> $log_path/$html_log_file
+echo "<p style="color:green">Note: AV1 Weekly Speed Graph:$graph</p>" >> $log_path/$html_log_file
 
 #fileutil cp /run/shm/"$bstream" /cns/yv-d/home/on2-prod/nguyennancy/Weekly/.

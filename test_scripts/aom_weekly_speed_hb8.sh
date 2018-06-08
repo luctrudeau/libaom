@@ -1,5 +1,5 @@
 #!/bin/sh
-set -x
+#set -x
 
 log_path=~/Devtest/log
 html_log_file=aomencwk.html
@@ -90,3 +90,4 @@ cp $elog $log_path
 cp $dlog $log_path
 
 #fileutil cp /run/shm/"$bstream" /cns/yv-d/home/on2-prod/nguyennancy/Weekly/.
+

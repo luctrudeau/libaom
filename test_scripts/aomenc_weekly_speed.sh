@@ -1,5 +1,5 @@
 #!/bin/sh
-set -x
+#set -x
 
 log_path=~/Devtest/log
 html_log_file=aomencwk.html
@@ -27,9 +27,17 @@ echo "<p>" >> $log_path/$html_log_file
 $script_path/aom_cmake_weekly.sh $av1_code >> $log_path/$html_log_file 2>&1
 echo "</p>" >> $log_path/$html_log_file
 
-$script_path/aom_weekly_speed_hb8.sh
-$script_path/aom_weekly_speed_hb10.sh
+#$script_path/aom_ts1_speed_hb8.sh
+#$script_path/aom_ts2_speed_hb8.sh
 
+$script_path/aom_weekly_speed_hb8.sh
+
+
+echo "<p>" >> $log_path/$html_log_file
+$script_path/aom_cmake_hbd10_weekly.sh $av1_code >> $log_path/$html_log_file 2>&1
+echo "</p>" >> $log_path/$html_log_file
+
+$script_path/aom_weekly_speed_hb10.sh
 
 # Send an email to coworkers
 users=nguyennancy

@@ -1,0 +1,117 @@
+#!/bin/sh
+#set -x
+
+script_path=~/Devtest/sandbox/aom/test_scripts
+
+av1_code=~/Devtest/av1d
+log_path=~/Devtest/log
+
+date_str=`date -d tomorrow +%b_%d_%Y`
+
+html_log_file=aomenc_$date_str.html
+
+s0_log_file=av1_s0_$date_str.txt
+s1_log_file=av1_s1_$date_str.txt
+s2_log_file=av1_s2_$date_str.txt
+s3_log_file=av1_s3_$date_str.txt
+# hbd(10bit)
+hbd_s0_log_file=av1_hbd_s0_$date_str.txt
+hbd_s1_log_file=av1_hbd_s1_$date_str.txt
+hbd_s2_log_file=av1_hbd_s2_$date_str.txt
+hbd_s3_log_file=av1_hbd_s3_$date_str.txt
+
+prev_date_str=`date +%b_%d_%Y`
+prev_s0_log_file=av1_s0_$prev_date_str.txt
+prev_s1_log_file=av1_s1_$prev_date_str.txt
+prev_s2_log_file=av1_s2_$prev_date_str.txt
+prev_s3_log_file=av1_s3_$prev_date_str.txt
+
+# hbd(10bit)
+prev_hbd_s0_log_file=av1_hbd_s0_$prev_date_str.txt
+prev_hbd_s1_log_file=av1_hbd_s1_$prev_date_str.txt
+prev_hbd_s2_log_file=av1_hbd_s2_$prev_date_str.txt
+prev_hbd_s3_log_file=av1_hbd_s3_$prev_date_str.txt
+
+test_dir=~/Devtest/nightly
+rm $test_dir/*
+
+$script_path/gen_html_header.sh > $log_path/$html_log_file
+
+echo "<p>" >> $log_path/$html_log_file
+$script_path/sync_codebase.sh $av1_code/aom >> $log_path/$html_log_file 2>&1
+echo "</p>" >> $log_path/$html_log_file
+
+echo "<p>" >> $log_path/$html_log_file
+$script_path/aom_conf_build.sh $av1_code >> $log_path/$html_log_file 2>&1
+echo "</p>" >> $log_path/$html_log_file
+
+#pdfps=`cat $log_path/$prev_s0_log_file | grep e_ok | awk '{print $2}' | awk 'NR==1 {print $1}'`
+#petime=`cat $log_path/$prev_s0_log_file | grep e_ok | awk '{print $1}' | awk 'NR==1 {print $1}'`
+#speed=0
+#bd=8
+#$script_path/aom_nightly_speed.sh $av1_code $pdfps $petime $speed $bd $html_log_file >> $log_path/$s0_log_file 2>&1
+
+pdfps=`cat $log_path/$prev_s0_log_file | grep e_ok | awk '{print $2}' | awk 'NR==1 {print $1}'`
+petime=`cat $log_path/$prev_s0_log_file | grep e_ok | awk '{print $1}' | awk 'NR==1 {print $1}'`
+speed=0
+bd=8
+$script_path/aom_nightly_speed0_hb8.sh $av1_code $pdfps $petime $speed $bd $html_log_file >> $log_path/$s0_log_file 2>&1
+
+pdfps=`cat $log_path/$prev_s1_log_file | grep e_ok | awk '{print $2}' | awk 'NR==1 {print $1}'`
+petime=`cat $log_path/$prev_s1_log_file | grep e_ok | awk '{print $1}' | awk 'NR==1 {print $1}'`
+speed=1
+bd=8
+$script_path/aom_nightly_speed1_hb8.sh $av1_code $pdfps $petime $speed $bd $html_log_file >> $log_path/$s1_log_file 2>&1
+
+pdfps=`cat $log_path/$prev_s2_log_file | grep e_ok | awk '{print $2}' | awk 'NR==1 {print $1}'`
+petime=`cat $log_path/$prev_s2_log_file | grep e_ok | awk '{print $1}' | awk 'NR==1 {print $1}'`
+speed=2
+bd=8
+$script_path/aom_nightly_speed2_hb8.sh $av1_code $pdfps $petime $speed $bd $html_log_file >> $log_path/$s2_log_file 2>&1
+
+pdfps=`cat $log_path/$prev_s3_log_file | grep e_ok | awk '{print $2}' | awk 'NR==1 {print $1}'`
+petime=`cat $log_path/$prev_s3_log_file | grep e_ok | awk '{print $1}' | awk 'NR==1 {print $1}'`
+speed=3
+bd=8
+$script_path/aom_nightly_speed3_hb8.sh $av1_code $pdfps $petime $speed $bd $html_log_file >> $log_path/$s3_log_file 2>&1
+
+#hbd(10bit) test
+#pdfps=`cat $log_path/$prev_hbd_s0_log_file | grep e_ok | awk '{print $2}' | awk 'NR==1 {print $1}'`
+#petime=`cat $log_path/$prev_hbd_s0_log_file | grep e_ok | awk '{print $1}' | awk 'NR==1 {print $1}'`
+#speed=0
+#bd=10
+#$script_path/aom_nightly_speed.sh $av1_code $pdfps $petime $speed $bd $html_log_file >> $log_path/$hbd_s0_log_file 2>&1
+
+pdfps=`cat $log_path/$prev_hbd_s0_log_file | grep e_ok | awk '{print $2}' | awk 'NR==1 {print $1}'`
+petime=`cat $log_path/$prev_hbd_s0_log_file | grep e_ok | awk '{print $1}' | awk 'NR==1 {print $1}'`
+speed=0
+bd=10
+$script_path/aom_nightly_speed0_hb10.sh $av1_code $pdfps $petime $speed $bd $html_log_file >> $log_path/$hbd_s0_log_file 2>&1
+
+pdfps=`cat $log_path/$prev_hbd_s1_log_file | grep e_ok | awk '{print $2}' | awk 'NR==1 {print $1}'`
+petime=`cat $log_path/$prev_hbd_s1_log_file | grep e_ok | awk '{print $1}' | awk 'NR==1 {print $1}'`
+speed=1
+bd=10
+$script_path/aom_nightly_speed1_hb10.sh $av1_code $pdfps $petime $speed $bd $html_log_file >> $log_path/$hbd_s1_log_file 2>&1
+
+pdfps=`cat $log_path/$prev_hbd_s2_log_file | grep e_ok | awk '{print $2}' | awk 'NR==1 {print $1}'`
+petime=`cat $log_path/$prev_hbd_s2_log_file | grep e_ok | awk '{print $1}' | awk 'NR==1 {print $1}'`
+speed=2
+bd=10
+$script_path/aom_nightly_speed2_hb10.sh $av1_code $pdfps $petime $speed $bd $html_log_file >> $log_path/$hbd_s2_log_file 2>&1
+
+pdfps=`cat $log_path/$prev_hbd_s3_log_file | grep e_ok | awk '{print $2}' | awk 'NR==1 {print $1}'`
+petime=`cat $log_path/$prev_hbd_s3_log_file | grep e_ok | awk '{print $1}' | awk 'NR==1 {print $1}'`
+speed=3
+bd=10
+$script_path/aom_nightly_speed3_hb10.sh $av1_code $pdfps $petime $speed $bd $html_log_file >> $log_path/$hbd_s3_log_file 2>&1
+
+# Send an email to coworkers
+users=nguyennancy
+host_name=`hostname`
+sender=nguyennancy
+cc_list="--cc=yunqingwang,vpx-eng"
+
+$script_path/gen_html_footer.sh >> $log_path/$html_log_file
+
+sendgmr --to=$users $cc_list --subject="AV1 Nightly Speed Report" --from=$sender --reply_to=$sender --html_file=/usr/local/google/home/nguyennancy/Devtest/log/$html_log_file --body_file=/usr/local/google/home/nguyennancy/Devtest/log/$html_log_file

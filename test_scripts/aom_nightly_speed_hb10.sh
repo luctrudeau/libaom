@@ -166,7 +166,7 @@ echo "    <td>$psnr</td>" >> $log_path/$html_log_file
 echo "    <td>$bssize</td>" >> $log_path/$html_log_file
 echo "  </tr>" >> $log_path/$html_log_file
 echo " <tr>" >> $log_path/$html_log_file
-echo "    <td colspan=\"8\">bitstream folder: /cns/yv-d/home/on2-prod/nguyennancy/Nightly/$bstream" >> $log_path/$html_log_file
+echo "    <td colspan=\"8\">bitstream folder: /cns/yv-d/home/EncoderTestingOutput/Nightly/ttl=60d/$bstream" >> $log_path/$html_log_file
 echo "  </tr>" >> $log_path/$html_log_file
 echo "    <td colspan=\"8\">Note: VP9 profile=2 bit-depth=10 speed=0 enc_time=141673(ms), dec_time=94369(ms), dec_FPS=847.74" >> $log_path/$html_log_file
 echo "  </tr>" >> $log_path/$html_log_file
@@ -177,4 +177,4 @@ echo "</table>" >> $log_path/$html_log_file
 #fileutil cp /run/shm/"$bstream" /cns/yv-d/home/on2-prod/nguyennancy/Nightly/.
 echo " <br style=\"width:100%\">" >> $log_path/$html_log_file
 echo "<p style="color:green">Note: AV1 Nightly Overall Graph:$graph</p>" >> $log_path/$html_log_file
-#fileutil cp /run/shm/"$bstream" /cns/yv-d/home/on2-prod/nguyennancy/Nightly/.
+#fileutil cp /run/shm/"$bstream" /cns/yv-d/home/EncoderTestingOutput/Nightly/ttl=60d/.

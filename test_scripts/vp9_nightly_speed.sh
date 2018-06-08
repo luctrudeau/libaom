@@ -5,7 +5,7 @@
 #  Configure, build, and run VP9 encoder/decoder for each experimental tool.
 #  Display the encoder/decode run time
 # Preassumption:
-#  1) Assume all script files are in ~/Dev/sandbox/libvpx/scripts
+#  1) Assume all script files are in ~/Devtest/sandbox/aom/test_scripts
 # Note:
 #  See encoder config output if set,
 #  verbose=-v
@@ -21,7 +21,7 @@
 #   2) bitdepth="--bit-depth=10/12"
 
 if [ "$#" -ne 4 ]; then
-  root_dir=~/Dev/vp9d
+  root_dir=~/Devtest/vp9d
   profile=0
   pdfps=1
   html_log_file=log.html
@@ -31,7 +31,7 @@ else
   pdfps=$3
   html_log_file=$4
 fi
-log_path=~/Dev/log
+log_path=~/Devtest/log
 
 if [ "$profile" == "2" ]; then
   bitdepth="--bit-depth=10"
@@ -43,9 +43,12 @@ fi
 
 code_dir=$root_dir/libvpx
 build_dir=$root_dir/release
-test_dir=~/Dev/nightly
-script_dir=~/Dev/sandbox/libvpx/scripts
-root_dir=~/Dev/vp9d
+test_dir=~/Devtest/nightly
+script_dir=~/Devtest/sandbox/aom/test_scripts
+root_dir=~/Devtest/vp9d
+
+cd $script_dir 
+$script_dir/vp9_conf_build.sh
 
 cd $root_dir/libvpx
 commit=`git log --pretty=%h -1`

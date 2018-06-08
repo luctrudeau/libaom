@@ -14,7 +14,7 @@
 # bitrate=600
 # fps="30000/1001"
 
-video=~/Dev/samples/videos/speed-set/night_720p30.y4m
+video=~/Devtest/samples/videos/speed-set/night_720p30.y4m
 wi=1280
 he=720
 frames=150

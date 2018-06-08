@@ -48,9 +48,6 @@ if [ "$bd" == "8" ]; then
 . $script_dir/BasketballDrill_480p.sh
 fi
 
-
-
-# General options
 codec="--codec=av1"
 verbose=
 core_id=1
@@ -93,10 +90,10 @@ do
 done
 
 #output_dir=~/Devtest/nightly
-awk '{print $9}' <$dlog &>>$test_dir/output2.txt
-echo | sed 's/(//' <$test_dir/output2.txt &>>$test_dir/output3.txt
-awk '{ total += $1; count++ } END { print total/count }' $test_dir/output3.txt &>>$test_dir/sum.txt
-dfps=`awk '{print $1}' < $test_dir/sum.txt` 
+awk '{print $9}' <$dlog &>>$test_dir/s0output2.txt
+echo | sed 's/(//' <$test_dir/s0output2.txt &>>$test_dir/s0output3.txt
+awk '{ total += $1; count++ } END { print total/count }' $test_dir/s0output3.txt &>>$test_dir/s0sum.txt
+dfps=`awk '{print $1}' < $test_dir/s0sum.txt` 
 
 #taskset -c $core_id ./aomdec /dev/shm/"$bstream" $codec --i420 --noblit --summary 2>&1 &>> $dlog
 
@@ -138,7 +135,7 @@ printf "\n"
 # Output a html log file for email
 echo "<table style=\"width:100%\">" >> $log_path/$html_log_file
 echo " <tr>" >> $log_path/$html_log_file
-echo "    <th style="color:blue" colspan=\"8\">AV1: $(basename $video), bitrate=$bitrate profile=$profile bit-depth=$bd frames=$frames speed=$speed" >> $log_path/$html_log_file
+echo "    <th style="color:blue" colspan=\"8\">AV1 SP0 BD8: $(basename $video), bitrate=$bitrate profile=$profile bit-depth=$bd frames=$frames speed=$speed" >> $log_path/$html_log_file
 echo "  </tr>" >> $log_path/$html_log_file
 echo "  <tr bgcolor="#E8F8F8">" >> $log_path/$html_log_file
 echo "    <th>Enc Time (ms)</th>" >> $log_path/$html_log_file
@@ -154,7 +151,7 @@ echo " <tr>" >> $log_path/$html_log_file
 echo "    <td>$etime</td>" >> $log_path/$html_log_file
 echo "    <td>$epercent</td>" >> $log_path/$html_log_file
 echo "    <td>$vp9</td>" >> $log_path/$html_log_file
-echo "    <td>$dfps</td>" >> $log_path/$html_log_file
+echo "    <th>$dfps</th>" >> $log_path/$html_log_file
 echo "    <td>$dpercent</td>" >> $log_path/$html_log_file
 echo "    <td>$dfpsvp9</td>" >> $log_path/$html_log_file
 echo "    <td>$psnr</td>" >> $log_path/$html_log_file
@@ -168,5 +165,6 @@ echo "  </tr>" >> $log_path/$html_log_file
 echo "</table>" >> $log_path/$html_log_file
 echo "</table>" >> $log_path/$html_log_file
 echo " <br style=\"width:100%\">" >> $log_path/$html_log_file
+echo " <br style=\"width:100%\">" >> $log_path/$html_log_file
 # Copy bitstream file to cns
-#fileutil cp /run/shm/"$bstream" /cns/yv-d/home/EncoderTestingOutput/Nightly/ttl=60d/.
+fileutil cp /run/shm/"$bstream" /cns/yv-d/home/EncoderTestingOutput/Nightly/ttl=60d/.
